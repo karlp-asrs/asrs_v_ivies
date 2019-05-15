@@ -1,5 +1,5 @@
 ---
-title: "ASRS returns compared to Ivy league endowments"
+title: "Preparing League Tables"
 author: "Karl Polen"
 date: "May 14, 2019"
 output: html_document
@@ -7,17 +7,24 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+"League Tables" compare the outcome of firms pursuing a similar goal or market.  They are common in investment banking and some consultants prepare tables of asset class returns to show the evolution of comparative returns of assset classes over time.
+
+In this post we show how to use `ggplot2` to present a league table.  The data we use compares total fund returns for the Arizona State Retirement System to Ivy League endowment funds.
+
+The Ivy League return data is from [Markov Processes](https://www.markovprocesses.com/blog/measuring-the-ivy-2018-a-good-year-for-returns-but-is-efficiency-becoming-an-issue/)
+
+First we prep the data.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 library(ggplot2)
 library(lubridate)
 library(tidyr)
 library(knitr)
 library(RColorBrewer)
 library(asrsPalettes)
-```
-
-Data is from [Markov Processes](https://www.markovprocesses.com/blog/measuring-the-ivy-2018-a-good-year-for-returns-but-is-efficiency-becoming-an-issue/)
-
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
 asrsdat=read.csv("asrs_returns.csv")
 asrsdat$Effective.Date=as.Date(asrsdat$Effective.Date,format="%m-%d-%y")
 asrsdat$Fyear=year(asrsdat$Effective.Date-10+months(6))
@@ -43,16 +50,28 @@ iname=rownames(ar2)
 sortfun=function(x) iname[sort.int(x,decreasing=FALSE,index.return=TRUE)[[2]]]
 ar3=as.data.frame(lapply(ar2,sortfun))
 colnames(ar3)=colnames(ar2)
-#kable(ar2)
-```
-
-```{r,echo=FALSE, message=FALSE, warning=FALSE }
 ar3$rank=1:9
 arlong1=gather(ar3,key=Year,value="Institution",-rank)
 arlong2=gather(annual_returns,key="Institution",value="Return",-Year)
 arlong=merge(arlong1,arlong2)
-arlong$text=paste(arlong$Institution,arlong$Return)
+arlong$text=paste0(arlong$Institution,"\n",arlong$Return)
+```
 
+Here is the human readable table of returns.
+
+```{r}
+kable(ar2)
+```
+
+Here is what the data looks like when you area done preparing it in "long form" for ggplot2.
+
+```{r}
+head(arlong)
+```
+
+Finally, here is the code to prepare the plot.
+
+```{r}
 ggplot(arlong,aes(y=rank,x=Year,label=text))+
   scale_fill_brewer(palette="Set3")+
   geom_tile(aes(fill=Institution),colour="grey50")+
@@ -65,10 +84,4 @@ ggplot(arlong,aes(y=rank,x=Year,label=text))+
     panel.grid.major=element_blank(),
     panel.grid.minor=element_blank(),
     axis.text.x=element_text(angle=90,hjust=1))
-
-
-```
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-arlog=log(1+ar2*.01)
-arlogcum=apply(arlog,1,cumsum)
 ```
