@@ -1,8 +1,3 @@
----
-title: "How to Prepare League Tables"
-output: 
-  html_document:
-    keep_md: TRUE
----
+## How to Prepare League Tables
 
 [Preparing League Tables](asrs_v_ivies.html)
