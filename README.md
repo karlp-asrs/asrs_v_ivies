@@ -1,2 +1,3 @@
-# asrs_v_ivies
-asrs returns compared to ivy league endowments
+File illustrates how to create a league table using ggplot2 and R.
+
+Data shows comparison of returns for ASRS and Ivy League endowments.
