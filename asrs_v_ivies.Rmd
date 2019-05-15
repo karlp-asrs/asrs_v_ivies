@@ -1,0 +1,74 @@
+---
+title: "ASRS returns compared to Ivy league endowments"
+author: "Karl Polen"
+date: "May 14, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(lubridate)
+library(tidyr)
+library(knitr)
+library(RColorBrewer)
+library(asrsPalettes)
+```
+
+Data is from [Markov Processes](https://www.markovprocesses.com/blog/measuring-the-ivy-2018-a-good-year-for-returns-but-is-efficiency-becoming-an-issue/)
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+asrsdat=read.csv("asrs_returns.csv")
+asrsdat$Effective.Date=as.Date(asrsdat$Effective.Date,format="%m-%d-%y")
+asrsdat$Fyear=year(asrsdat$Effective.Date-10+months(6))
+asrsdat$logreturn=log(1+.01*asrsdat$X1.Month)
+asrs_annual_ret=aggregate(asrsdat$logreturn,by=list(asrsdat$Fyear),FUN=sum)
+asrs_annual_ret$x=-1+exp(asrs_annual_ret$x)
+idx=asrs_annual_ret[,1]%in%2009:2018
+ASRS=round(100*asrs_annual_ret[idx,2],1)
+annual_returns=data.frame(Year=2009:2018,
+                          ASRS,
+                          Upenn=c(-15.7,12.6,18.6,1.6,14.4,17.5,7.5,-1.4,14.3,12.9),
+                          Columbia=c(-16.1,17.3,23.6,2.3,11.5,17.5,7.6,-.9,13.7,9),
+                          Dartmouth=c(-19.6,10,18.4,5.8,12.1,19.2,8.3,-1.9,14.6,12.2),
+                          Princeton=c(-23,14.7,21.9,3.1,11.7,19.6,12.7,.8,12.5,14.2),
+                          Brown=c(-23.1,10.2,18.5,1,12.6,16.1,5.7,-1.1,13.4,13.2),
+                          Yale=c(-24.6,8.9,21.9,4.7,12.5,20.2,11.5,3.4,11.3,12.3),
+                          Cornell=c(-26,12.6,19.9,.1,11.4,15.8,3.4,-3.3,12.5,10.6),
+                          Harvard=c(-27.3,11,21.4,-.05,11.3,15.4,5.8,-2,8.1,10))
+ar2=t(annual_returns)
+colnames(ar2)=ar2[1,]
+ar2=as.data.frame(ar2[-1,])
+iname=rownames(ar2)
+sortfun=function(x) iname[sort.int(x,decreasing=FALSE,index.return=TRUE)[[2]]]
+ar3=as.data.frame(lapply(ar2,sortfun))
+colnames(ar3)=colnames(ar2)
+#kable(ar2)
+```
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE }
+ar3$rank=1:9
+arlong1=gather(ar3,key=Year,value="Institution",-rank)
+arlong2=gather(annual_returns,key="Institution",value="Return",-Year)
+arlong=merge(arlong1,arlong2)
+arlong$text=paste(arlong$Institution,arlong$Return)
+
+ggplot(arlong,aes(y=rank,x=Year,label=text))+
+  scale_fill_brewer(palette="Set3")+
+  geom_tile(aes(fill=Institution),colour="grey50")+
+  geom_text(size=2)+
+  scale_y_discrete()+
+  ggtitle("ASRS and Ivy League Endowment Returns")+
+  ylab("")+
+  theme(
+    panel.background=element_blank(),
+    panel.grid.major=element_blank(),
+    panel.grid.minor=element_blank(),
+    axis.text.x=element_text(angle=90,hjust=1))
+
+
+```
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+arlog=log(1+ar2*.01)
+arlogcum=apply(arlog,1,cumsum)
+```
