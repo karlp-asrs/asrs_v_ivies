@@ -62,7 +62,7 @@ arlong$text=paste0(arlong$Institution,"\n",arlong$Return)
 Here is the human readable table of returns.
 
 ```{r}
-kable(ar2)
+ar2
 ```
 
 Here is what the data looks like when you area done preparing it in "long form" for ggplot2.
