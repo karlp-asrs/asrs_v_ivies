@@ -68,7 +68,7 @@ ar2
 Here is what the data looks like when you area done preparing it in "long form" for ggplot2.
 
 ```{r}
-head(arlong)
+head(arlong,12)
 ```
 
 Finally, here is the code to prepare the plot.

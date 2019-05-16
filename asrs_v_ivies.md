@@ -43,17 +43,23 @@ Here is what the data looks like when you area done preparing it in "long form" 
 
 
 ```r
-head(arlong)
+head(arlong,12)
 ```
 
 ```
-##   Year Institution rank Return             text
-## 1 2009        ASRS    7  -18.6      ASRS\n-18.6
-## 2 2009       Brown    4  -23.1     Brown\n-23.1
-## 3 2009    Columbia    8  -16.1  Columbia\n-16.1
-## 4 2009     Cornell    2  -26.0     Cornell\n-26
-## 5 2009   Dartmouth    6  -19.6 Dartmouth\n-19.6
-## 6 2009     Harvard    1  -27.3   Harvard\n-27.3
+##    Year Institution rank Return             text
+## 1  2009        ASRS    7  -18.6      ASRS\n-18.6
+## 2  2009       Brown    4  -23.1     Brown\n-23.1
+## 3  2009    Columbia    8  -16.1  Columbia\n-16.1
+## 4  2009     Cornell    2  -26.0     Cornell\n-26
+## 5  2009   Dartmouth    6  -19.6 Dartmouth\n-19.6
+## 6  2009     Harvard    1  -27.3   Harvard\n-27.3
+## 7  2009   Princeton    5  -23.0   Princeton\n-23
+## 8  2009       Upenn    9  -15.7     Upenn\n-15.7
+## 9  2009        Yale    3  -24.6      Yale\n-24.6
+## 10 2010        ASRS    8   14.8       ASRS\n14.8
+## 11 2010       Brown    3   10.2      Brown\n10.2
+## 12 2010    Columbia    9   17.3   Columbia\n17.3
 ```
 
 Finally, here is the code to prepare the plot.
