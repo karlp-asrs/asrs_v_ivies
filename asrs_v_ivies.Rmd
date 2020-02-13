@@ -27,24 +27,19 @@ library(tidyr)
 library(knitr)
 library(RColorBrewer)
 library(asrsPalettes)
-asrsdat=read.csv("asrs_returns.csv")
-asrsdat$Effective.Date=as.Date(asrsdat$Effective.Date,format="%m-%d-%y")
-asrsdat$Fyear=year(asrsdat$Effective.Date-10+months(6))
-asrsdat$logreturn=log(1+.01*asrsdat$X1.Month)
-asrs_annual_ret=aggregate(asrsdat$logreturn,by=list(asrsdat$Fyear),FUN=sum)
-asrs_annual_ret$x=-1+exp(asrs_annual_ret$x)
-idx=asrs_annual_ret[,1]%in%2009:2018
-ASRS=round(100*asrs_annual_ret[idx,2],1)
-annual_returns=data.frame(Year=2009:2018,
-                          ASRS,
-                          Upenn=c(-15.7,12.6,18.6,1.6,14.4,17.5,7.5,-1.4,14.3,12.9),
-                          Columbia=c(-16.1,17.3,23.6,2.3,11.5,17.5,7.6,-.9,13.7,9),
-                          Dartmouth=c(-19.6,10,18.4,5.8,12.1,19.2,8.3,-1.9,14.6,12.2),
-                          Princeton=c(-23,14.7,21.9,3.1,11.7,19.6,12.7,.8,12.5,14.2),
-                          Brown=c(-23.1,10.2,18.5,1,12.6,16.1,5.7,-1.1,13.4,13.2),
-                          Yale=c(-24.6,8.9,21.9,4.7,12.5,20.2,11.5,3.4,11.3,12.3),
-                          Cornell=c(-26,12.6,19.9,.1,11.4,15.8,3.4,-3.3,12.5,10.6),
-                          Harvard=c(-27.3,11,21.4,-.05,11.3,15.4,5.8,-2,8.1,10))
+# asrsdat=read.csv("asrs_returns.csv")
+# asrsdat$Effective.Date=as.Date(asrsdat$Effective.Date,format="%m-%d-%y")
+# asrsdat$Fyear=year(asrsdat$Effective.Date-10+months(6))
+# asrsdat$logreturn=log(1+.01*asrsdat$X1.Month)
+# asrs_annual_ret=aggregate(asrsdat$logreturn,by=list(asrsdat$Fyear),FUN=sum)
+# asrs_annual_ret$x=-1+exp(asrs_annual_ret$x)
+# idx=asrs_annual_ret[,1]%in%2009:2018
+# ASRS=round(100*asrs_annual_ret[idx,2],1)
+ASRS=c(-18.6,14.8,24.6,1.3,13.1,18.5,3.2,.6,13.9,9.4,6.6)
+annual_returns=data.frame(Year=2009:2019, ASRS,
+                      Penn=c(-15.7,12.6,18.6,1.6,14.4,17.5,7.5,-1.4,14.3,12.9,6.5),
+                      Columbia=c(-16.1,17.3,23.6,2.3,11.5,17.5,7.6,-.9,13.7,9,3.8),
+                  Dartmouth=c(-19.6,10,18.4,5.8,12.1,19.2,8.3,-1.9,14.6,12.2,7.5),                    Princeton=c(-23,14.7,21.9,3.1,11.7,19.6,12.7,.8,12.5,14.2,6.2),                       Brown=c(-23.1,10.2,18.5,1,12.6,16.1,5.7,-1.1,13.4,13.2,12.4),                        Yale=c(-24.6,8.9,21.9,4.7,12.5,20.2,11.5,3.4,11.3,12.3,5.7),                       Cornell=c(-26,12.6,19.9,.1,11.4,15.8,3.4,-3.3,12.5,10.6,5.3),                          Harvard=c(-27.3,11,21.4,-.05,11.3,15.4,5.8,-2,8.1,10,6.5))
 ar2=t(annual_returns)
 colnames(ar2)=ar2[1,]
 ar2=as.data.frame(ar2[-1,])
